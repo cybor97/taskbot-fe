@@ -30,12 +30,12 @@ jobs:
       - name: Deploying
         uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-private-key: ${{ secrets.APP_SSH_KEY }}
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Deliver
         run: |
           zip -r duckbot_webapp.zip ./;
-          scp -oStrictHostKeyChecking=no duckbot_webapp.zip deploy@${{ secrets.APP_SSH_HOST }}:duckbot_webapp.zip;
-          scp -oStrictHostKeyChecking=no install.sh deploy@${{ secrets.APP_SSH_HOST }}:install.sh;
-          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.APP_SSH_HOST }} <<< $'chmod +x ./install.sh';
-          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.APP_SSH_HOST }} <<< $'./install.sh';
+          scp -oStrictHostKeyChecking=no duckbot_webapp.zip deploy@${{ secrets.SSH_HOST }}:duckbot_webapp.zip;
+          scp -oStrictHostKeyChecking=no install.sh deploy@${{ secrets.SSH_HOST }}:install.sh;
+          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.SSH_HOST }} <<< $'chmod +x ./install.sh';
+          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.SSH_HOST }} <<< $'./install.sh';
