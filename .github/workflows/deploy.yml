@@ -1,0 +1,42 @@
+name: Build & Deploy
+
+on:
+  pull_request:
+    types: closed
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.*]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install app dependencies
+        run: yarn install
+
+      - name: Build app
+        run: yarn build
+
+      - name: Clean up
+        run: rm -rf ./node_modules && rm -rf ./dist && rm -rf ./.git;
+
+      - name: Deploying
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.APP_SSH_KEY }}
+
+      - name: Deliver
+        run: |
+          zip -r duckbot_webapp.zip ./;
+          scp -oStrictHostKeyChecking=no duckbot_webapp.zip deploy@${{ secrets.APP_SSH_HOST }}:duckbot_webapp.zip;
+          scp -oStrictHostKeyChecking=no install.sh deploy@${{ secrets.APP_SSH_HOST }}:install.sh;
+          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.APP_SSH_HOST }} <<< $'chmod +x ./install.sh';
+          ssh -oStrictHostKeyChecking=no deploy@${{ secrets.APP_SSH_HOST }} <<< $'./install.sh';
