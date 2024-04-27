@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { WebAppProvider } from "@zakarliuka/react-telegram-web-tools";
+import {
+  WebAppProvider,
+  useExpand,
+} from "@zakarliuka/react-telegram-web-tools";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -10,7 +13,7 @@ import {
 } from "@mui/material";
 
 import HomeIcon from "@mui/icons-material/Home";
-import TaskIcon from '@mui/icons-material/LibraryBooks';
+import TaskIcon from "@mui/icons-material/LibraryBooks";
 import PeopleIcon from "@mui/icons-material/People";
 
 const defaultTheme = createTheme({
@@ -23,6 +26,7 @@ function App() {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState(0);
   const [theme, setTheme] = useState(defaultTheme);
+  const [, expand] = useExpand();
   useEffect(() => {
     setTheme(
       createTheme({
@@ -33,6 +37,8 @@ function App() {
         },
       }),
     );
+    expand();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
