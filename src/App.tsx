@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { WebAppProvider } from "@zakarliuka/react-telegram-web-tools";
 import {
@@ -9,28 +8,37 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-const darkTheme = createTheme({
+import HomeIcon from "@mui/icons-material/Home";
+import TaskIcon from '@mui/icons-material/LibraryBooks';
+import PeopleIcon from "@mui/icons-material/People";
+
+const defaultTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
-
 
 function App() {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState(0);
+  const [theme, setTheme] = useState(defaultTheme);
+  useEffect(() => {
+    setTheme(
+      createTheme({
+        palette: {
+          mode: window.matchMedia?.("(prefers-color-scheme: dark)")?.matches
+            ? "dark"
+            : "light",
+        },
+      }),
+    );
+  }, []);
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <WebAppProvider>
         <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
           <a href="https://react.dev" target="_blank">
             <img src={reactLogo} className="logo react" alt="React logo" />
           </a>
@@ -54,9 +62,9 @@ function App() {
             setValue(newValue);
           }}
         >
-          <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+          <BottomNavigationAction label="Tasks" icon={<TaskIcon />} />
+          <BottomNavigationAction label="Frens" icon={<PeopleIcon />} />
         </BottomNavigation>
       </WebAppProvider>
     </ThemeProvider>
