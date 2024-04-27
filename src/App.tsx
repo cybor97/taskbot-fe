@@ -8,6 +8,8 @@ import {
 import {
   BottomNavigation,
   BottomNavigationAction,
+  Card,
+  CardContent,
   ThemeProvider,
   Typography,
   createTheme,
@@ -17,31 +19,45 @@ import HomeIcon from "@mui/icons-material/Home";
 import TaskIcon from "@mui/icons-material/LibraryBooks";
 import PeopleIcon from "@mui/icons-material/People";
 
-import mainLogoData from "./assets/main-logo.json";
-import { useLottie } from "lottie-react";
-
 const defaultTheme = createTheme({
   palette: {
     mode: "dark",
   },
 });
 
+interface TaskGroup {
+  id: number;
+  name: string;
+  tasks: [
+    {
+      id: number;
+      name: string;
+      description: string;
+      url: string;
+      userTasks: [{ id: number; reward: number; completed: boolean }];
+    },
+  ];
+}
+
+interface User {
+  id: number;
+  tgId: string;
+  tonWalletId: string | null;
+  username: string;
+  isActive: boolean;
+  referralCode: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 function App() {
-  const [count, setCount] = useState(0);
   const [value, setValue] = useState(0);
-  const [tasks, setTasks] = useState([] as { id: number; name: string }[]);
+  const [tasks, setTasks] = useState([] as TaskGroup[]);
+  const [user, setUser] = useState(null as User | null);
   const [apiResponse, setApiResponse] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
   const { initData, initDataUnsafe } = useInitData();
   const [, expand] = useExpand();
-
-  const lottieObj = useLottie({
-    animationData: mainLogoData,
-    loop: false,
-    autoPlay: false,
-    playsInline: false,
-  });
-  const { View: AnimationView } = lottieObj;
 
   useEffect(() => {
     setTheme(
@@ -63,46 +79,63 @@ function App() {
           setApiResponse(data);
         }
       });
+    fetch(`https://duckbot.earlgreyvpn.com/api/me?${initData}`)
+      .then((response) => Promise.all([response.status, response.json()]))
+      .then(([status, data]) => {
+        if (status === 200) {
+          setUser(data);
+        } else {
+          setApiResponse(data);
+        }
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <WebAppProvider>
-        <div>{AnimationView}</div>
-
         {initDataUnsafe?.user?.username && (
-          <h1>Welcome @${initDataUnsafe?.user?.username}</h1>
+          <h1>Welcome @{initDataUnsafe?.user?.username}</h1>
         )}
 
-        <div className="card">
-          <button
-            onClick={() => {
-              setCount((count) => count + 1);
-              if (lottieObj.animationItem?.isPaused) {
-                lottieObj.goToAndPlay(0);
-              }
-            }}
-          >
-            Clicker test {count}
-          </button>
-          <button
-            onClick={() => {
-              fetch(`https://duckbot.earlgreyvpn.com/api/me?${initData}`)
-                .then((res) => res.json())
-                .then((data) => {
-                  console.log({ data });
-                  setApiResponse(data);
-                });
-            }}
-          >
-            API test
-          </button>
-          <Typography>{JSON.stringify({ apiResponse }, null, 2)}</Typography>
-          {tasks?.map((task) => (
-            <Typography key={task.id}>{JSON.stringify({ task })}</Typography>
-          ))}
-        </div>
+        {user && (
+          <Card sx={{ maxWidth: 345 }}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {user.username ?? `#${user.tgId}`}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Your referral code #{user.referralCode}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+
+        {tasks?.map((taskGroup) => (
+          <Card sx={{ maxWidth: 345 }} key={taskGroup.id}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {taskGroup.name}
+              </Typography>
+              {taskGroup.tasks.map((task) => (
+                <Card sx={{ maxWidth: 345 }} key={task.id}>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {task.name}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      {task.url}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {task.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+        ))}
+        <Typography>{JSON.stringify({ apiResponse }, null, 2)}</Typography>
         <BottomNavigation
           showLabels
           value={value}
