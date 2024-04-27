@@ -6,10 +6,17 @@ import {
   useInitData,
 } from "@zakarliuka/react-telegram-web-tools";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   BottomNavigation,
   BottomNavigationAction,
+  Box,
   Card,
   CardContent,
+  Chip,
+  Link,
+  Stack,
   ThemeProvider,
   Typography,
   createTheme,
@@ -18,6 +25,7 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import TaskIcon from "@mui/icons-material/LibraryBooks";
 import PeopleIcon from "@mui/icons-material/People";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const defaultTheme = createTheme({
   palette: {
@@ -56,7 +64,7 @@ function App() {
   const [user, setUser] = useState(null as User | null);
   const [apiResponse, setApiResponse] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
-  const { initData, initDataUnsafe } = useInitData();
+  const { initData } = useInitData();
   const [, expand] = useExpand();
 
   useEffect(() => {
@@ -94,15 +102,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <WebAppProvider>
-        {initDataUnsafe?.user?.username && (
-          <h1>Welcome @{initDataUnsafe?.user?.username}</h1>
-        )}
-
         {user && (
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {user.username ?? `#${user.tgId}`}
+              <Typography gutterBottom variant="h1" component="div">
+                Welcome {user.username ?? `#${user.tgId}`}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Your referral code #{user.referralCode}
@@ -111,30 +115,36 @@ function App() {
           </Card>
         )}
 
-        {tasks?.map((taskGroup) => (
-          <Card sx={{ maxWidth: 345 }} key={taskGroup.id}>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {taskGroup.name}
-              </Typography>
-              {taskGroup.tasks.map((task) => (
-                <Card sx={{ maxWidth: 345 }} key={task.id}>
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {task.name}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {task.url}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {task.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+        <div className="tasksContainer">
+          {tasks?.map((taskGroup) => (
+            <Accordion key={taskGroup.id}>
+              <AccordionSummary
+                expandIcon={<ArrowDownwardIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Typography>{taskGroup.name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {taskGroup.tasks.map((task) => (
+                  <Box key={task.id}>
+                    <Typography variant="body1">{task.name}</Typography>
+                    <Link href={task.url}>{task.name}</Link>
+                    <Typography variant="body2">{task.description}</Typography>
+                    {task.userTasks.map((userTask) => (
+                      <Stack direction="row" spacing={1} key={userTask.id}>
+                        {userTask.completed && <Chip label="Completed!" />}
+                        {!userTask.completed && <Chip label="New!" />}
+                        <Chip label={`Reward ${userTask.reward}🦆`} />
+                      </Stack>
+                    ))}
+                  </Box>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </div>
+
         <Typography>{JSON.stringify({ apiResponse }, null, 2)}</Typography>
         <BottomNavigation
           showLabels
