@@ -29,6 +29,7 @@ const defaultTheme = createTheme({
 function App() {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState(0);
+  const [tasks, setTasks] = useState([] as { id: number; name: string }[]);
   const [apiResponse, setApiResponse] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
   const { initData, initDataUnsafe } = useInitData();
@@ -53,7 +54,15 @@ function App() {
       }),
     );
     expand();
-    console.log({ initData, initDataUnsafe });
+    fetch(`https://duckbot.earlgreyvpn.com/api/tasks?${initData}`)
+      .then((response) => Promise.all([response.status, response.json()]))
+      .then(([status, data]) => {
+        if (status === 200) {
+          setTasks(data);
+        } else {
+          setApiResponse(data);
+        }
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -79,7 +88,7 @@ function App() {
           </button>
           <button
             onClick={() => {
-              fetch(`https://duckbot.earlgreyvpn.com/api/test?${initData}`)
+              fetch(`https://duckbot.earlgreyvpn.com/api/me?${initData}`)
                 .then((res) => res.json())
                 .then((data) => {
                   console.log({ data });
@@ -89,7 +98,10 @@ function App() {
           >
             API test
           </button>
-          <Typography>{JSON.stringify({ apiResponse })}</Typography>
+          <Typography>{JSON.stringify({ apiResponse }, null, 2)}</Typography>
+          {tasks?.map((task) => (
+            <Typography key={task.id}>{JSON.stringify({ task })}</Typography>
+          ))}
         </div>
         <BottomNavigation
           showLabels
