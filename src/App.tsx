@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
 import {
   WebAppProvider,
   useExpand,
+  useInitData,
 } from "@zakarliuka/react-telegram-web-tools";
 import {
   BottomNavigation,
   BottomNavigationAction,
   ThemeProvider,
+  Typography,
   createTheme,
 } from "@mui/material";
 
 import HomeIcon from "@mui/icons-material/Home";
 import TaskIcon from "@mui/icons-material/LibraryBooks";
 import PeopleIcon from "@mui/icons-material/People";
+
+import mainLogoData from "./assets/main-logo.json";
+import { useLottie, useLottieInteractivity } from "lottie-react";
 
 const defaultTheme = createTheme({
   palette: {
@@ -25,8 +29,19 @@ const defaultTheme = createTheme({
 function App() {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState(0);
+  const [apiResponse, setApiResponse] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
+  const { initData, initDataUnsafe } = useInitData();
   const [, expand] = useExpand();
+
+  const lottieObj = useLottie({
+    animationData: mainLogoData,
+    loop: false,
+    autoPlay: false,
+    playsInline: false,
+  });
+  const { View: AnimationView } = lottieObj;
+
   useEffect(() => {
     setTheme(
       createTheme({
@@ -38,29 +53,40 @@ function App() {
       }),
     );
     expand();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log({ initData, initDataUnsafe });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <WebAppProvider>
-        <div>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
+        <div>{AnimationView}</div>
+
         <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
+          <button
+            onClick={() => {
+              setCount((count) => count + 1);
+              if (lottieObj.animationItem?.isPaused) {
+                lottieObj.goToAndPlay(0);
+              }
+            }}
+          >
+            Clicker test {count}
           </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
+          <button
+            onClick={() => {
+              fetch(`https://duckbot.earlgreyvpn.com/api/test`)
+                .then((res) => res.json())
+                .then((data) => {
+                  console.log({ data });
+                  setApiResponse(data);
+                });
+            }}
+          >
+            API test
+          </button>
+          <Typography>{JSON.stringify({ apiResponse })}</Typography>
         </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
         <BottomNavigation
           showLabels
           value={value}
