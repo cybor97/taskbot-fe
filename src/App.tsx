@@ -18,7 +18,7 @@ import TaskIcon from "@mui/icons-material/LibraryBooks";
 import PeopleIcon from "@mui/icons-material/People";
 
 import mainLogoData from "./assets/main-logo.json";
-import { useLottie, useLottieInteractivity } from "lottie-react";
+import { useLottie } from "lottie-react";
 
 const defaultTheme = createTheme({
   palette: {
