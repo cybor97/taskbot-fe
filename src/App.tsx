@@ -62,6 +62,10 @@ function App() {
       <WebAppProvider>
         <div>{AnimationView}</div>
 
+        {initDataUnsafe?.user?.username && (
+          <h1>Welcome @${initDataUnsafe?.user?.username}</h1>
+        )}
+
         <div className="card">
           <button
             onClick={() => {
@@ -75,7 +79,7 @@ function App() {
           </button>
           <button
             onClick={() => {
-              fetch(`https://duckbot.earlgreyvpn.com/api/test`)
+              fetch(`https://duckbot.earlgreyvpn.com/api/test?${initData}`)
                 .then((res) => res.json())
                 .then((data) => {
                   console.log({ data });
