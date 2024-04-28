@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-#root .tasksContainer {
+#root .duckPageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,9 +49,10 @@
   outline: none;
 }
 
-#root .tasksLogo {
+#root .duckLogo {
   width: 48px;
   height: 48px;
+  font-size: 48px;
 }
 
 #root .duckTitle {
@@ -64,4 +65,64 @@
 #root .duckSubtitle {
   margin-top: 12px;
   margin-bottom: 16px;
+}
+
+#root .duckChain {
+  margin-top: 20px;
+}
+
+#root .duckChain .duckChainElement {
+  align-items: stretch;
+  display: flex;
+  gap: 20px;
+}
+
+#root .duckChain .duckChainElement .point-container {
+  display: grid;
+  grid-template-rows: 1fr 10px 1fr;
+  justify-items: center;
+  padding-left: 10px;
+  padding-right: 6px;
+}
+
+#root .duckChain .duckChainElement .point-container .point {
+  background-color: #232323;
+  border-radius: 10px;
+  height: 10px;
+  width: 10px;
+}
+
+#root .duckChain .duckChainElement .point-container .stick {
+  background-color: #232323;
+  height: 100%;
+  width: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  #root .duckChain .duckChainElement .point-container .point {
+    background-color: #ddd;
+  }
+
+  #root .duckChain .duckChainElement .point-container .stick {
+    background-color: #ddd;
+  }
+}
+
+#root .duckChain .duckChainElement .content-container {
+  padding: 16px 0;
+}
+
+#root .duckChain .duckChainElement .content-container .content-title {
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+#root .duckChain .duckChainElement .content-container .content-subtitle {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-top: 4px;
 }

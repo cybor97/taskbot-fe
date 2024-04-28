@@ -42,8 +42,8 @@ export function TasksPage() {
   }, []);
 
   return (
-    <div className="tasksContainer">
-      <div className="tasksLogo">{AnimationView}</div>
+    <div className="duckPageContainer">
+      <div className="duckLogo">{AnimationView}</div>
       {tasks && (
         <Typography variant="h5" className="duckTitle" fontSize={28}>
           {tasks.flatMap((taskGroup) => taskGroup.tasks).length} tasks available
