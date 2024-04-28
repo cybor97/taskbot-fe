@@ -1,0 +1,29 @@
+.duckListItem {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+.duckListItemLeftIcon {
+  width: 24px;
+  margin-right: 16px;
+}
+
+.duckListItemAction {
+  margin-left: 16px;
+}
+
+.duckListItemAction,
+.duckListItemLeftIcon {
+  height: 24px;
+}
+
+.duckListItemChildren {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+}

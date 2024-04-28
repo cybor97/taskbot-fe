@@ -1,9 +1,10 @@
+import frens from "../assets/frens.webp";
 import { DuckBulletPoint } from "../components/duck-bullet-point";
 
 export function ReferralPage() {
   return (
     <div className="duckPageContainer">
-      <div className="duckLogo">👨‍👩‍👧‍👦</div>
+        <img src={frens} className="duckLogo" alt="Friends emoji"/>
       <div className="duckTitle">Invite frens. Earn points</div>
       <div className="duckChain duckSubtitle">
         <div className="duckChainElement">

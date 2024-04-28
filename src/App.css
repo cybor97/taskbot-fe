@@ -40,6 +40,7 @@
 
 #root .duckNavigation {
   position: fixed;
+  box-shadow: 0px -2px 5px 0px #ddd;
   left: 0px;
   right: 0px;
   bottom: 1.5rem;
@@ -106,6 +107,11 @@
   #root .duckChain .duckChainElement .point-container .stick {
     background-color: #ddd;
   }
+
+  #root .duckNavigation {
+    background-color: #232323;
+    box-shadow: 0px -2px 5px 0px #111;
+  }
 }
 
 #root .duckChain .duckChainElement .content-container {
@@ -125,4 +131,33 @@
   font-weight: 400;
   line-height: 20px;
   margin-top: 4px;
+}
+
+#root .duckLogo.duckPreloader.hideCompleted:not(.loading) {
+  margin-top: 0px;
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+#root .duckLogo.duckPreloader {
+  margin-top: 0px;
+  transition: width 0.5s, height 0.5s, opacity 0.5s, margin-top 0.5s ease-in-out;
+}
+
+#root .duckLogo.duckPreloader.loading {
+  margin-top: 64px;
+  width: 256px;
+  height: 256px;
+}
+
+#root .duckListIcon {
+  width: 24px;
+  height: 24px;
+}
+
+#root .duckGroupHeader {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  align-self: flex-start;
 }

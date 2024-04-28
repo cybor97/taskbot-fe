@@ -1,0 +1,9 @@
+.duckGroupList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  overflow: scroll;
+  margin-bottom: 48px;
+}

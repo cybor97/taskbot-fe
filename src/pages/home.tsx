@@ -1,9 +1,10 @@
-import { CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { User } from "../types";
 import apiQuery from "../api";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import Avatar from "react-avatar";
+import { DuckPreloader } from "../components/duck-preloader";
 
 export function HomePage() {
   const { initData, initDataUnsafe } = useInitData();
@@ -27,7 +28,7 @@ export function HomePage() {
   }
   return (
     <div className="duckPageContainer">
-      {loading && <CircularProgress />}
+      <DuckPreloader loading={loading} persist={false}/>
       {user && <Avatar name={avatarName ?? "D"} round />}
       {user && (
         <Typography variant="h5" className="duckTitle" fontSize={28}>
