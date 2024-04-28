@@ -40,7 +40,7 @@
 
 #root .duckNavigation {
   position: fixed;
-  box-shadow: 0px -2px 5px 0px #ddd;
+  box-shadow: 0px -2px 2px 0px #ddd;
   background-color: #fff;
   left: 0px;
   right: 0px;
@@ -111,7 +111,7 @@
 
   #root .duckNavigation {
     background-color: #232323;
-    box-shadow: 0px -2px 5px 0px #111;
+    box-shadow: 0px -2px 2px 0px #111;
   }
 }
 
