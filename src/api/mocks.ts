@@ -47,3 +47,15 @@ export const mockUser = {
   createdAt: "2024-04-27T22:13:22.282Z",
   updatedAt: "2024-04-27T22:13:22.282Z",
 };
+
+export const mockDropAt = {
+  dropAt: "2024-04-27T22:13:22.000Z"
+}
+
+export const mockReferralsLimit = {
+  referralsLimit: 10
+}
+
+export const mockTotalXP = {
+  totalXP: 100
+}

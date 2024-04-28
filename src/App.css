@@ -19,8 +19,9 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 48px);
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 #root .duckContainer {
@@ -161,4 +162,11 @@
   margin-top: 16px;
   margin-bottom: 8px;
   align-self: flex-start;
+}
+
+#root .duckXPContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

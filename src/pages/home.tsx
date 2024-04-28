@@ -10,14 +10,27 @@ export function HomePage() {
   const { initData, initDataUnsafe } = useInitData();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null as User | null);
+  const [dropAt, setDropAt] = useState(null as Date | null);
+  const [xp, setXP] = useState(null as number | null);
 
   useEffect(() => {
-    apiQuery("/me", initData).then(([status, data]) => {
-      if (status === 200) {
-        setUser(data);
-      }
-      setLoading(false);
-    });
+    Promise.all([
+      apiQuery("/me", initData).then(([status, data]) => {
+        if (status === 200) {
+          setUser(data);
+        }
+      }),
+      apiQuery("/dropat", initData).then(([status, data]) => {
+        if (status === 200 && data !== null && data.dropAt !== null) {
+          setDropAt(new Date(data.dropAt));
+        }
+      }),
+      apiQuery("/xp", initData).then(([status, data]) => {
+        if (status === 200 && data !== null && data.dropAt !== null) {
+          setXP(data.totalXP);
+        }
+      }),
+    ]).then(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   let avatarName = user ? user.username ?? user.tgId : null;
@@ -28,21 +41,27 @@ export function HomePage() {
   }
   return (
     <div className="duckPageContainer">
-      <DuckPreloader loading={loading} persist={false}/>
-      {user && <Avatar name={avatarName ?? "D"} round />}
+      <DuckPreloader loading={loading} persist={false} />
       {user && (
-        <Typography variant="h5" className="duckTitle" fontSize={28}>
-          {user.username}
-        </Typography>
+        <>
+          <Avatar
+            name={avatarName ?? "D"}
+            className="duckAvatar"
+            round={true}
+          />
+          <Typography variant="h5" className="duckTitle" fontSize={28}>
+            {user.username ? `@${user.username}` : `#${user.tgId}`}
+          </Typography>
+          <div className="duckXPContainer">
+            <Typography variant="h3" className="duckXP">
+              XP {xp ?? "Calculating..."}
+            </Typography>
+          </div>
+        </>
       )}
-      {user && (
-        <Typography variant="body2" className="duckSubtitle" fontSize={16}>
-          {user.createdAt}
-        </Typography>
-      )}
-      {user && (
-        <Typography variant="body2" className="duckSubtitle" fontSize={16}>
-          {user.referralCode}
+      {dropAt && (
+        <Typography variant="body2">
+          Drop at: {dropAt.toDateString()}
         </Typography>
       )}
     </div>
