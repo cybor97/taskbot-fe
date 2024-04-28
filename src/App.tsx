@@ -19,9 +19,42 @@ import { HomePage } from "./pages/home";
 import { TasksPage } from "./pages/tasks";
 import { ReferralPage } from "./pages/referral";
 
-const defaultTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: "#ffea00",
+    },
+    secondary: {
+      main: "#ffea00",
+    },
+  },
+  components: {
+    MuiBottomNavigationAction: {
+      defaultProps: {
+        disableRipple: true,
+        disableTouchRipple: true,
+      },
+    },
+  },
+});
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#ffa000",
+    },
+    secondary: {
+      main: "#ffa000",
+    }
+  },
+  components: {
+    MuiBottomNavigationAction: {
+      defaultProps: {
+        disableRipple: true,
+        disableTouchRipple: true,
+      },
+    },
   },
 });
 
@@ -30,18 +63,14 @@ function App() {
   const [value, setValue] = useState(pathname);
   const navigate = useNavigate();
 
-  const [theme, setTheme] = useState(defaultTheme);
+  const [theme, setTheme] = useState(darkTheme);
   const [, expand] = useExpand();
 
   useEffect(() => {
     setTheme(
-      createTheme({
-        palette: {
-          mode: window.matchMedia?.("(prefers-color-scheme: dark)")?.matches
-            ? "dark"
-            : "light",
-        },
-      }),
+      window.matchMedia?.("(prefers-color-scheme: dark)")?.matches
+        ? darkTheme
+        : lightTheme,
     );
     expand();
     // eslint-disable-next-line react-hooks/exhaustive-deps
