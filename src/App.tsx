@@ -50,14 +50,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <WebAppProvider>
-        <Routes>
-          <Route path="/" Component={HomePage} />
-          <Route path="/tasks" Component={TasksPage} />
-          <Route path="/referral" Component={ReferralPage} />
-        </Routes>
+        <div className="duckContainer">
+          <Routes>
+            <Route path="/" Component={HomePage} />
+            <Route path="/tasks" Component={TasksPage} />
+            <Route path="/referral" Component={ReferralPage} />
+          </Routes>
+        </div>
         <BottomNavigation
           showLabels
           value={value}
+          className="duckNavigation"
           onChange={(_, newValue) => {
             setValue(newValue);
           }}

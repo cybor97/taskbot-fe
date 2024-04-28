@@ -2,34 +2,19 @@ export const mockTasks = [
   {
     id: 1,
     name: "Test group 1",
-    tasks: [
-      {
-        id: 1,
-        name: "Test task 1",
-        description: "Some test task 1",
-        url: "https://duckduckgo.com",
-        userTasks: [
-          {
-            id: 1,
-            reward: 100,
-            completed: false,
-          },
-        ],
-      },
-      {
-        id: 2,
-        name: "Test task 2",
-        description: "Some test task 2",
-        url: "https://duckduckgo.com",
-        userTasks: [
-          {
-            id: 2,
-            reward: 200,
-            completed: false,
-          },
-        ],
-      },
-    ],
+    tasks: new Array(10).fill(null).map((_, taskIndex) => ({
+      id: taskIndex,
+      name: `Test task ${taskIndex}`,
+      description: `Some test task ${taskIndex}`,
+      url: "https://duckduckgo.com",
+      userTasks: [
+        {
+          id: 1,
+          reward: Math.floor(100 + Math.random() * 500),
+          completed: false,
+        },
+      ],
+    })),
   },
   {
     id: 2,
