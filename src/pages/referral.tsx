@@ -1,10 +1,11 @@
-import frens from "../assets/frens.webp";
+import referralPageLogo from "../assets/referralPageLogo.json";
 import { DuckBulletPoint } from "../components/duck-bullet-point";
+import { DuckPreloader } from "../components/duck-preloader";
 
 export function ReferralPage() {
   return (
     <div className="duckPageContainer">
-        <img src={frens} className="duckLogo" alt="Friends emoji"/>
+      <DuckPreloader persist animationData={referralPageLogo} loading={false} />
       <div className="duckTitle">Invite frens. Earn points</div>
       <div className="duckChain duckSubtitle">
         <div className="duckChainElement">

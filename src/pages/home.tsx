@@ -27,7 +27,7 @@ export function HomePage() {
       }),
       apiQuery("/xp", initData).then(([status, data]) => {
         if (status === 200 && data !== null && data.dropAt !== null) {
-          setXP(data.totalXP);
+          setXP(data.totalXp);
         }
       }),
     ]).then(() => setLoading(false));
@@ -47,13 +47,18 @@ export function HomePage() {
           <Avatar
             name={avatarName ?? "D"}
             className="duckAvatar"
+            color="#ffa000"
             round={true}
           />
           <Typography variant="h5" className="duckTitle" fontSize={28}>
             {user.username ? `@${user.username}` : `#${user.tgId}`}
           </Typography>
           <div className="duckXPContainer">
-            <Typography variant="h3" className="duckXP">
+            <Typography
+              variant="h5"
+              className="duckXP"
+              color={xp !== null ? "primary" : "default"}
+            >
               XP {xp ?? "Calculating..."}
             </Typography>
           </div>

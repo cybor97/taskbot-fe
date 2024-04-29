@@ -6,19 +6,30 @@ import {
   mockUser,
 } from "./mocks";
 
-export default async function apiQuery(endpoint: string, initData?: string) {
+export default async function apiQuery(
+  endpoint: string,
+  initData?: string,
+  method = "GET",
+) {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   if (apiUrl === "test") {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     return mockData(endpoint);
   }
 
-  return fetch(`${apiUrl}${endpoint}?${initData}`).then((response) =>
-    Promise.all([response.status, response.json()]),
+  return fetch(`${apiUrl}${endpoint}?${initData}`, { method }).then(
+    (response) => Promise.all([response.status, response.json()]),
   );
 }
 
 function mockData(endpoint: string) {
+  if (
+    endpoint &&
+    endpoint.startsWith("/tasks") &&
+    endpoint.endsWith("/verify")
+  ) {
+    return [200];
+  }
   switch (endpoint) {
     case "/tasks":
       return [200, mockTasks];

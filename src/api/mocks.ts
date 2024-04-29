@@ -57,5 +57,5 @@ export const mockReferralsLimit = {
 }
 
 export const mockTotalXP = {
-  totalXP: 100
+  totalXp: 100
 }

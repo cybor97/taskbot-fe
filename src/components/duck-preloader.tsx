@@ -1,16 +1,20 @@
 import { useLottie } from "lottie-react";
-import mainLogoData from "../assets/main-logo.json";
+import preloaderData from "../assets/preloader.json";
 import { useRef, useState } from "react";
 
 export function DuckPreloader(
-  props: Readonly<{ loading: boolean; persist: boolean }>,
+  props: Readonly<{
+    loading: boolean;
+    persist: boolean;
+    animationData?: unknown;
+  }>,
 ) {
-  const { loading, persist } = props;
+  const { loading, persist, animationData } = props;
   const hideTimer = useRef(null as number | null);
   const [completed, setCompleted] = useState(false);
   const lottieObj = useLottie({
-    animationData: mainLogoData,
-    loop: false,
+    animationData: animationData ?? preloaderData,
+    loop: loading,
     autoPlay: false,
     playsInline: false,
   });
