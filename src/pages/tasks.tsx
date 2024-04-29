@@ -59,7 +59,7 @@ export function TasksPage() {
             `/tasks/${uncompletedUT.id}/verify`,
             initData,
             "POST",
-            `wallet_id=${rawAddress}`,
+            { wallet_id: rawAddress },
           ).then(([status]) => {
             if (status === 200) {
               uncompletedUT.completed = true;
@@ -108,12 +108,9 @@ export function TasksPage() {
         );
       } else {
         setLoading(true);
-        apiQuery(
-          `/tasks/${uncompletedUT.id}/verify`,
-          initData,
-          "POST",
-          `wallet_id=${rawAddress}`,
-        ).then(([status]) => {
+        apiQuery(`/tasks/${uncompletedUT.id}/verify`, initData, "POST", {
+          wallet_id: rawAddress,
+        }).then(([status]) => {
           if (status === 200) {
             uncompletedUT.completed = true;
             tasksPending.delete(task.id);

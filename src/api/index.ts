@@ -10,7 +10,7 @@ export default async function apiQuery(
   endpoint: string,
   initData?: string,
   method = "GET",
-  additionalQuery?: string,
+  body: unknown = undefined,
 ) {
   const apiUrl = import.meta.env.VITE_APP_API_URL;
   if (apiUrl === "test") {
@@ -18,8 +18,9 @@ export default async function apiQuery(
     return mockData(endpoint);
   }
 
-  return fetch(`${apiUrl}${endpoint}?${initData}&${additionalQuery}`, {
+  return fetch(`${apiUrl}${endpoint}?${initData}`, {
     method,
+    body: body ? JSON.stringify(body) : undefined,
   }).then((response) => Promise.all([response.status, response.json()]));
 }
 
