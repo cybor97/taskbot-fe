@@ -10,7 +10,7 @@ import { Telegram as TelegramIcon } from "@mui/icons-material";
 import { DuckList } from "../components/duck-list";
 import { DuckListItem } from "../components/duck-list-item";
 import { DuckGroupList } from "../components/duck-group-list";
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 
 export function TasksPage() {
   const { initData } = useInitData();
@@ -19,6 +19,7 @@ export function TasksPage() {
 
   const webApp = useWebApp();
   const rawAddress = useTonAddress(false);
+  const [tonConnectUI] = useTonConnectUI();
 
   const getPendingTasks = () =>
     new Set(JSON.parse(localStorage.getItem("tasksPending") ?? "[]"));
@@ -104,6 +105,7 @@ export function TasksPage() {
         tasksPending.add(task.id);
         if (task.type === "hasWallet") {
           setHasWalletPending(true);
+          tonConnectUI.openModal();
         }
         localStorage.setItem(
           "tasksPending",
