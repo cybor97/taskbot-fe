@@ -24,13 +24,15 @@ export function TasksPage() {
     new Set(JSON.parse(localStorage.getItem("tasksPending") ?? "[]"));
 
   const tasksPending = getPendingTasks();
-
-  const [hasWalletPending, setHasWalletPending] = useState(
+  const getHasWalletPending = () =>
     tasks.some((group) =>
       group.tasks.some(
         (task) => task.type === "hasWallet" && tasksPending.has(task.id),
       ),
-    ),
+    );
+
+  const [hasWalletPending, setHasWalletPending] = useState(
+    getHasWalletPending(),
   );
 
   useEffect(() => {
@@ -78,6 +80,7 @@ export function TasksPage() {
         setTasks([...tasks]);
         Promise.all(promises).then(() => {
           setLoading(false);
+          setHasWalletPending(getHasWalletPending());
         });
       }
     };
@@ -118,9 +121,9 @@ export function TasksPage() {
               "tasksPending",
               JSON.stringify(Array.from(tasksPending)),
             );
-            setLoading(false);
-            setHasWalletPending(false);
           }
+          setHasWalletPending(false);
+          setLoading(false);
         });
       }
     };
@@ -182,7 +185,11 @@ export function TasksPage() {
           </Fragment>
         ))}
       </DuckGroupList>
-      {hasWalletPending && <TonConnectButton />}
+      {hasWalletPending && (
+        <TonConnectButton
+          style={{ position: "fixed", bottom: 92, zIndex: 2 }}
+        />
+      )}
     </div>
   );
 }
