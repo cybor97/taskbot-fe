@@ -17,6 +17,12 @@ export function TasksPage() {
   const [loading, setLoading] = useState(true);
   const webApp = useWebApp();
 
+  const getPendingTasks = () => new Set(
+    JSON.parse(localStorage.getItem("tasksPending") ?? "[]"),
+  );
+
+  const tasksPending = getPendingTasks();
+
   useEffect(() => {
     apiQuery("/tasks", initData).then(([status, data]) => {
       if (status === 200) {
@@ -24,12 +30,51 @@ export function TasksPage() {
       }
       setLoading(false);
     });
+
+    const handleFocus = () => {
+      const tasksPending = getPendingTasks();
+
+      const promises = tasks
+        .flatMap((group) => group.tasks)
+        .map((task) => {
+          if (!tasksPending.has(task.id)) {
+            return null;
+          }
+          const uncompletedUT =
+            task.userTasks.find((ut) => !ut.completed) ?? null;
+          if (uncompletedUT === null) {
+            return null;
+          }
+          return apiQuery(`/tasks/${uncompletedUT.id}/verify`, initData).then(
+            ([status]) => {
+              console.log({ status });
+              if (status === 200) {
+                uncompletedUT.completed = true;
+                tasksPending.delete(task.id);
+                localStorage.setItem(
+                  "tasksPending",
+                  JSON.stringify(Array.from(tasksPending)),
+                );
+              }
+            },
+          );
+        })
+        .filter(Boolean);
+
+      if (promises.length > 0) {
+        setLoading(true);
+        setTasks([...tasks]);
+        Promise.all(promises).then(() => {
+          setLoading(false);
+        });
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const tasksPending = new Set(
-    JSON.parse(localStorage.getItem("tasksPending") ?? "[]"),
-  );
 
   const handleTaskClick = (task: Task, uncompletedUT: UserTask | null) => {
     if (uncompletedUT === null) {
