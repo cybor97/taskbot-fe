@@ -10,22 +10,26 @@ import { Telegram as TelegramIcon } from "@mui/icons-material";
 import { DuckList } from "../components/duck-list";
 import { DuckListItem } from "../components/duck-list-item";
 import { DuckGroupList } from "../components/duck-group-list";
-import { TonConnectButton } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
 
 export function TasksPage() {
   const { initData } = useInitData();
   const [tasks, setTasks] = useState([] as TaskGroup[]);
   const [loading, setLoading] = useState(true);
+
   const webApp = useWebApp();
+  const rawAddress = useTonAddress(false);
 
   const getPendingTasks = () =>
     new Set(JSON.parse(localStorage.getItem("tasksPending") ?? "[]"));
 
   const tasksPending = getPendingTasks();
 
-  const hasWalletPending = tasks.find((group) =>
-    group.tasks.some(
-      (task) => task.type === "hasWallet" && tasksPending.has(task.id),
+  const [hasWalletPending, setHasWalletPending] = useState(
+    tasks.some((group) =>
+      group.tasks.some(
+        (task) => task.type === "hasWallet" && tasksPending.has(task.id),
+      ),
     ),
   );
 
@@ -51,19 +55,21 @@ export function TasksPage() {
           if (uncompletedUT === null) {
             return null;
           }
-          return apiQuery(`/tasks/${uncompletedUT.id}/verify`, initData).then(
-            ([status]) => {
-              console.log({ status });
-              if (status === 200) {
-                uncompletedUT.completed = true;
-                tasksPending.delete(task.id);
-                localStorage.setItem(
-                  "tasksPending",
-                  JSON.stringify(Array.from(tasksPending)),
-                );
-              }
-            },
-          );
+          return apiQuery(
+            `/tasks/${uncompletedUT.id}/verify`,
+            initData,
+            "POST",
+            `wallet_id=${rawAddress}`,
+          ).then(([status]) => {
+            if (status === 200) {
+              uncompletedUT.completed = true;
+              tasksPending.delete(task.id);
+              localStorage.setItem(
+                "tasksPending",
+                JSON.stringify(Array.from(tasksPending)),
+              );
+            }
+          });
         })
         .filter(Boolean);
 
@@ -88,30 +94,37 @@ export function TasksPage() {
     }
 
     return () => {
-      if (task.url && !tasksPending.has(task.id)) {
+      if (!tasksPending.has(task.id)) {
         if (task.url !== null) {
           webApp?.openLink(task.url);
         }
         tasksPending.add(task.id);
+        if (task.type === "hasWallet") {
+          setHasWalletPending(true);
+        }
         localStorage.setItem(
           "tasksPending",
           JSON.stringify(Array.from(tasksPending)),
         );
       } else {
         setLoading(true);
-        apiQuery(`/tasks/${uncompletedUT.id}/verify`, initData, "POST").then(
-          ([status]) => {
-            if (status === 200) {
-              uncompletedUT.completed = true;
-              tasksPending.delete(task.id);
-              localStorage.setItem(
-                "tasksPending",
-                JSON.stringify(Array.from(tasksPending)),
-              );
-              setLoading(false);
-            }
-          },
-        );
+        apiQuery(
+          `/tasks/${uncompletedUT.id}/verify`,
+          initData,
+          "POST",
+          `wallet_id=${rawAddress}`,
+        ).then(([status]) => {
+          if (status === 200) {
+            uncompletedUT.completed = true;
+            tasksPending.delete(task.id);
+            localStorage.setItem(
+              "tasksPending",
+              JSON.stringify(Array.from(tasksPending)),
+            );
+            setLoading(false);
+            setHasWalletPending(false);
+          }
+        });
       }
     };
   };
