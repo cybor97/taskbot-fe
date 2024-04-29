@@ -7,6 +7,7 @@ export interface TaskGroup {
 export interface Task {
   id: number;
   name: string;
+  type: string;
   description: string;
   url: string;
   userTasks: [UserTask];

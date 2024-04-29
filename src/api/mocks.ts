@@ -4,9 +4,10 @@ export const mockTasks = [
     name: "Test group 1",
     tasks: new Array(10).fill(null).map((_, taskIndex) => ({
       id: taskIndex,
+      type: "default",
       name: `Test task ${taskIndex}`,
       description: `Some test task ${taskIndex}`,
-      url: "https://duckduckgo.com",
+      url: "https://duckduckgo.com" as string | null,
       userTasks: [
         {
           id: 1,
@@ -23,6 +24,7 @@ export const mockTasks = [
       {
         id: 3,
         name: "Test task 3",
+        type: "default",
         description: "Some test task 3",
         url: "https://duckduckgo.com",
         userTasks: [
@@ -37,6 +39,9 @@ export const mockTasks = [
   },
 ];
 
+mockTasks[0].tasks[0].type = "hasWallet";
+mockTasks[0].tasks[0].url = null;
+
 export const mockUser = {
   id: 2,
   tgId: "568766184",
@@ -49,13 +54,13 @@ export const mockUser = {
 };
 
 export const mockDropAt = {
-  dropAt: "2024-04-27T22:13:22.000Z"
-}
+  dropAt: "2024-04-27T22:13:22.000Z",
+};
 
 export const mockReferralsLimit = {
-  referralsLimit: 10
-}
+  referralsLimit: 10,
+};
 
 export const mockTotalXP = {
-  totalXp: 100
-}
+  totalXp: 100,
+};

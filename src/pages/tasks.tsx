@@ -10,6 +10,7 @@ import { Telegram as TelegramIcon } from "@mui/icons-material";
 import { DuckList } from "../components/duck-list";
 import { DuckListItem } from "../components/duck-list-item";
 import { DuckGroupList } from "../components/duck-group-list";
+import { TonConnectButton } from "@tonconnect/ui-react";
 
 export function TasksPage() {
   const { initData } = useInitData();
@@ -21,6 +22,12 @@ export function TasksPage() {
     new Set(JSON.parse(localStorage.getItem("tasksPending") ?? "[]"));
 
   const tasksPending = getPendingTasks();
+
+  const hasWalletPending = tasks.find((group) =>
+    group.tasks.some(
+      (task) => task.type === "hasWallet" && tasksPending.has(task.id),
+    ),
+  );
 
   useEffect(() => {
     apiQuery("/tasks", initData).then(([status, data]) => {
@@ -82,7 +89,9 @@ export function TasksPage() {
 
     return () => {
       if (task.url && !tasksPending.has(task.id)) {
-        webApp?.openLink(task.url);
+        if (task.url !== null) {
+          webApp?.openLink(task.url);
+        }
         tasksPending.add(task.id);
         localStorage.setItem(
           "tasksPending",
@@ -151,7 +160,8 @@ export function TasksPage() {
                         color="primary"
                       >
                         +
-                        {task.userTasks.reduce((acc, ut) => acc + ut.reward, 0)} XP
+                        {task.userTasks.reduce((acc, ut) => acc + ut.reward, 0)}{" "}
+                        XP
                       </Typography>
                     </div>
                     <Typography variant="body2">{task.description}</Typography>
@@ -162,6 +172,7 @@ export function TasksPage() {
           </Fragment>
         ))}
       </DuckGroupList>
+      {hasWalletPending && <TonConnectButton />}
     </div>
   );
 }

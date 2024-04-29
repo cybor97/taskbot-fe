@@ -18,6 +18,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { HomePage } from "./pages/home";
 import { TasksPage } from "./pages/tasks";
 import { ReferralPage } from "./pages/referral";
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
 const darkTheme = createTheme({
   palette: {
@@ -46,7 +47,7 @@ const lightTheme = createTheme({
     },
     secondary: {
       main: "#ffa000",
-    }
+    },
   },
   components: {
     MuiBottomNavigationAction: {
@@ -77,44 +78,46 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <WebAppProvider>
-        <div className="duckContainer">
-          <Routes>
-            <Route path="/" Component={HomePage} />
-            <Route path="/tasks" Component={TasksPage} />
-            <Route path="/referral" Component={ReferralPage} />
-          </Routes>
-        </div>
-        <BottomNavigation
-          showLabels
-          value={value}
-          className="duckNavigation"
-          onChange={(_, newValue) => {
-            setValue(newValue);
-          }}
-        >
-          <BottomNavigationAction
-            label="Home"
-            value="/"
-            onClick={() => navigate("/")}
-            icon={<HomeIcon />}
-          />
-          <BottomNavigationAction
-            label="Tasks"
-            value="/tasks"
-            onClick={() => navigate("/tasks")}
-            icon={<TaskIcon />}
-          />
-          <BottomNavigationAction
-            label="Frens"
-            value="/referral"
-            onClick={() => navigate("/referral")}
-            icon={<PeopleIcon />}
-          />
-        </BottomNavigation>
-      </WebAppProvider>
-    </ThemeProvider>
+    <TonConnectUIProvider manifestUrl="https://duckbot.earlgreyvpn.com/tonconnect-manifest.json">
+      <ThemeProvider theme={theme}>
+        <WebAppProvider>
+          <div className="duckContainer">
+            <Routes>
+              <Route path="/" Component={HomePage} />
+              <Route path="/tasks" Component={TasksPage} />
+              <Route path="/referral" Component={ReferralPage} />
+            </Routes>
+          </div>
+          <BottomNavigation
+            showLabels
+            value={value}
+            className="duckNavigation"
+            onChange={(_, newValue) => {
+              setValue(newValue);
+            }}
+          >
+            <BottomNavigationAction
+              label="Home"
+              value="/"
+              onClick={() => navigate("/")}
+              icon={<HomeIcon />}
+            />
+            <BottomNavigationAction
+              label="Tasks"
+              value="/tasks"
+              onClick={() => navigate("/tasks")}
+              icon={<TaskIcon />}
+            />
+            <BottomNavigationAction
+              label="Frens"
+              value="/referral"
+              onClick={() => navigate("/referral")}
+              icon={<PeopleIcon />}
+            />
+          </BottomNavigation>
+        </WebAppProvider>
+      </ThemeProvider>
+    </TonConnectUIProvider>
   );
 }
 
