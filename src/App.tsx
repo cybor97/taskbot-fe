@@ -78,7 +78,12 @@ function App() {
   }, []);
 
   return (
-    <TonConnectUIProvider manifestUrl="https://duckbot.earlgreyvpn.com/tonconnect-manifest.json">
+    <TonConnectUIProvider
+      manifestUrl="https://duckbot.earlgreyvpn.com/tonconnect-manifest.json"
+      actionsConfiguration={{
+        twaReturnUrl: "https://t.me/ducktaskbot_testbot",
+      }}
+    >
       <ThemeProvider theme={theme}>
         <WebAppProvider>
           <div className="duckContainer">
