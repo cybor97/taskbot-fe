@@ -17,9 +17,8 @@ export function TasksPage() {
   const [loading, setLoading] = useState(true);
   const webApp = useWebApp();
 
-  const getPendingTasks = () => new Set(
-    JSON.parse(localStorage.getItem("tasksPending") ?? "[]"),
-  );
+  const getPendingTasks = () =>
+    new Set(JSON.parse(localStorage.getItem("tasksPending") ?? "[]"));
 
   const tasksPending = getPendingTasks();
 
@@ -143,7 +142,18 @@ export function TasksPage() {
                       />
                     }
                   >
-                    <Typography variant="body1">{task.name}</Typography>
+                    <div className="duckTaskLabelContainer">
+                      <Typography variant="body1">{task.name}</Typography>
+                      <Typography
+                        variant="body2"
+                        className="duckRewardLabel"
+                        component="a"
+                        color="primary"
+                      >
+                        +
+                        {task.userTasks.reduce((acc, ut) => acc + ut.reward, 0)} XP
+                      </Typography>
+                    </div>
                     <Typography variant="body2">{task.description}</Typography>
                   </DuckListItem>
                 );

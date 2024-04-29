@@ -170,3 +170,14 @@
   flex-direction: column;
   justify-content: center;
 }
+
+#root .duckTaskLabelContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+#root .duckRewardLabel {
+  margin-left: 3px;
+  margin-top: -3px;
+  font-size: 12px;
+}
